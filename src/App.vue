@@ -8,7 +8,7 @@
         <meta property="og:title" :content="'Emiliano Maccaferri &mdash; ' + $route.meta.title">
         <meta property="og:site_name" :content="'Emiliano Maccaferri &mdash; ' + $route.meta.title">
         <meta property="og:see_also" content="https://emilianomaccaferri.com">
-        <meta itemprop="name" :content="$route.meta.title">
+        <meta itemprop="name" :content="'Emiliano Maccaferri &mdash;' + $route.meta.title">
         <meta itemprop="description" :content="$route.meta.description">
         <meta name="twitter:url" content="https://emilianomaccaferri.com">
         <meta name="twitter:title" :content="'Emiliano Maccaferri &mdash; ' + $route.meta.title">
