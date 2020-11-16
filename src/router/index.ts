@@ -7,7 +7,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: Home,
     meta: {
-        title: 'A freelance web developer'
+        title: 'A freelance web developer',
+        description: `A 20y/o freelance fullstack web developer from Italy`
     }
   }
 ]
