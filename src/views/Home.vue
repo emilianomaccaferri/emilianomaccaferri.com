@@ -11,7 +11,7 @@
                 </div>
                 <div class="comeup later other padded">
                     <p>
-                        I'm a 20y/o freelance fullstack web developer from Italy mainly focused on backend but constantly striving to get the best UIs when working with clients.<br><br>
+                        I'm a 21y/o freelance fullstack web developer from Italy mainly focused on backend but constantly striving to get the best UIs when working with clients.<br><br>
                         When not working or wrapping my head around projects I often travel and/or buy unnecessarily expensive clothes.<br>
                         I occasionally <a href="https://youtube.com/c/MaccaBeats" target="_blank">make music</a>.<br>
                         <a href="mailto:inbox@emilianomaccaferri.com">Hit me up</a> if you need anything!
