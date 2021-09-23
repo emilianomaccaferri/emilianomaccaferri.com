@@ -1,0 +1,8 @@
+@mixin perfect-bg($url) {
+    background: url($url) no-repeat center center fixed;
+    background-size: contain;
+}
+@mixin perfect-bg-unfixed($url) {
+    background: url($url) no-repeat center center;
+    background-size: cover;
+}

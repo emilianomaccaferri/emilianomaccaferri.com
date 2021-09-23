@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Work+Sans:wght@300&display=swap');
+@import 'mixins';
+@import 'partials/colors';
+
+body{
+    margin: 0;
+    background: $white;
+}
+h1,h2,h3,h4,h5,h6{
+    font-family: 'DM Sans', sans-serif;
+    &.light{
+        font-weight: lighter;
+    }
+    &.bold{
+        font-weight: bold;
+    }
+}
+p,span{
+    font-family: 'Raleway', sans-serif;
+    &.light{
+        font-weight: lighter;
+    }
+    &.bold{
+        font-weight: bold;
+    }
+}
+section{
+    &.whole{
+        width: 100%;
+        height: 100vh;
+    }
+    .container{
+        margin: 0 auto;
+        width: 65vw;
+    }
+    h1{
+        &.title{
+            &.pre{
+                margin-top: -150px;
+            }
+            font-size: 4.35em;
+        }
+    }
+    p{
+        &.pre{
+            margin-toP: -130px;
+        }
+        &.large{
+            font-size: 1.75em;
+            line-height: 40px;
+            font-family: 'Work Sans', sans-serif;
+        }
+        text-align: justify;
+    }
+}
+#home-navbar-mobile{
+    display: none;
+}
+.me{
+    width: 65vw;
+    height: 60vh;
+    position: relative;
+    .nopseudo{
+        display: inline-block;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 400;
+        position: absolute;
+        font-size: 2em;
+        letter-spacing: .035em;
+        left: -40px;
+        top: 100%;
+        transform-origin: top left;
+        transform: rotate(270deg);
+    }
+}
+#home-navbar, #home-navbar-mobile{
+    font-family: 'Work Sans', sans-serif;
+    position: absolute;
+    top: -25px;
+    right: 0;
+    a{
+        font-weight: lighter;
+        text-decoration: none;
+        color: $black;
+        font-size: 1em;
+        padding-right: 10px;
+        padding-left: 10px;
+        &:nth-child(4){
+            padding-right: 0;
+        }
+    }
+}
+.flexbox{
+    display: flex;
+    &.justify-center{ justify-content: center; }
+    &.justity-between{ justify-content: space-between; }
+    &.justify-right{ justify-content: right; }
+    &.align-center{ align-items: center; }
+}
+
+@media screen and (max-width: 900px){
+    #me{
+        width: 100%;;
+        &:before{
+            display: none;
+        }
+        #home-navbar{
+            display: none;
+        }
+    }
+    #home-navbar-mobile{
+        position: fixed;
+        top: 0;
+        width: 100%;
+        display: block;
+        padding-top: 20px;
+        padding-right: 20px;
+    }
+}
