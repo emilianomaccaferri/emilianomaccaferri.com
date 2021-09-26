@@ -3,6 +3,6 @@
     background-size: contain;
 }
 @mixin perfect-bg-unfixed($url) {
-    background: url($url) no-repeat center center;
+    background: url($url) no-repeat center center scroll;
     background-size: cover;
 }

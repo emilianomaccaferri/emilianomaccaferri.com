@@ -29,35 +29,65 @@ section{
         width: 100%;
         height: 100vh;
     }
+    a.c{
+        color: $black;
+        text-decoration: none;
+        border-bottom: 1px solid $black;
+        padding-bottom: 5px;
+    }
     .container{
         margin: 0 auto;
-        width: 65vw;
+        margin-top: -85px;
+        width: 60vw;
+        &.t{
+            z-index: -1;
+            opacity: 0;
+            left: 0; right: 0;
+            overflow: hidden;
+            transform: translateY(100px);
+        }
     }
     h1{
         &.title{
             &.pre{
-                margin-top: -150px;
+                margin-top: -40px;
             }
             font-size: 4.35em;
         }
     }
     p{
         &.pre{
-            margin-toP: -130px;
+            margin-top: -130px;
         }
         &.large{
             font-size: 1.75em;
             line-height: 40px;
             font-family: 'Work Sans', sans-serif;
         }
-        text-align: justify;
     }
 }
 #home-navbar-mobile{
     display: none;
+    background: $white;
+}
+#loading{
+    background: $white;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    z-index: 1000;
+    transition: .75s all ease;
+    .flash{
+        animation: flash 1.5s linear infinite;
+    }
+}
+@keyframes flash {
+    0%{ opacity: 0; }
+    50%{ opacity: 1; }
+    100%{ opacity: 0; }
 }
 .me{
-    width: 65vw;
+    width: 60%;
     height: 60vh;
     position: relative;
     .nopseudo{
@@ -67,7 +97,7 @@ section{
         position: absolute;
         font-size: 2em;
         letter-spacing: .035em;
-        left: -40px;
+        left: -50px;
         top: 100%;
         transform-origin: top left;
         transform: rotate(270deg);
@@ -99,9 +129,18 @@ section{
 }
 
 @media screen and (max-width: 900px){
-    #me{
-        width: 100%;;
-        &:before{
+    section{
+        .container{
+            width: 90%;
+            margin-top: -100px;
+        }
+        &.whole{
+            height: 90vh;
+        }
+    }
+    .me{
+        width: 90%;
+        .nopseudo{
             display: none;
         }
         #home-navbar{
@@ -115,5 +154,61 @@ section{
         display: block;
         padding-top: 20px;
         padding-right: 20px;
+        padding-bottom: 20px;
+        background: $white;
+        z-index: 100;
     }
 }
+@media screen and (max-width: 900px) and (min-height: 620px){
+    .me{
+        width: 90%;
+        height: 40vh;
+    }
+}
+@media screen and (max-width: 900px) and (max-height: 620px){
+    .me{
+        width: 90%;
+        height: 300px;
+    }
+    .flexbox{
+        display: flex;
+        &.tagged{
+            margin-top: 80px;
+            align-items: flex-start !important;
+        }
+    }
+    .me{
+        width: 90%;
+        height: 400px;
+    }
+    section{
+        &.whole{
+            height: auto;
+        }
+        .container{
+            margin-top: 0px;
+        }
+        p{
+            margin: 0;
+            padding: 0;
+            &.pre{
+                margin-top: -160px;
+            }
+        }
+    }
+}
+/*@media screen and (max-width: 900px) and (min-height: 500px){
+    .me{
+        width: 90%;
+        height: 40vh;
+    }
+    section{
+        p{
+            margin: 0;
+            padding: 0;
+            &.pre{
+                margin-top: -160px;
+            }
+        }
+    }
+}*/
