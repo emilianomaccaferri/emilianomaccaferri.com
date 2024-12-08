@@ -1,28 +1,33 @@
+@use './colors';
 
 @font-face {
     font-family: archivo;
-    src: url(~/assets/fonts/archivo.ttf);
+    src: url(../fonts/archivo.ttf);
 }
 @font-face {
     font-family: archivo;
-    src: url(~/assets/fonts/archivo-black.ttf);
+    src: url(../fonts/archivo-black.ttf);
     font-weight: bold;
 }
 h1{
-    font-size: clamp(3.5rem, 4.2062vw, 4.2062rem); 
+    font-size: clamp(2rem, 4.2062vw, 4.2062rem); 
     font-family: archivo;
     font-weight: bold;
     &.hero{
-        font-size: clamp(3rem, 6vw, 6rem); 
+        font-size: clamp(2.25rem, 6vw, 6rem); 
+        color: colors.$textPrimary;
     }
     &.small{
         font-size: clamp(1.15rem, 1.25vw, 1.25rem);
     }
 }
 span, p{
-    font-family: archivo;
     font-size: clamp(1rem, 1vw, 1rem);
     &.subtitle{
         font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+        color: colors.$textSecondary;
+        a{
+            color: inherit;
+        }
     }
 }
