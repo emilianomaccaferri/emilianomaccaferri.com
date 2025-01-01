@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>emiliano maccaferri &mdash; {{ section.title }}</title>
+    <link href="/style.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <section class="flexbox column" style="gap: 24px;">
+      <h1>{{ section.title }}</h1>
+      <div class="posts">
+        {% for page in section.pages %}
+            <article class="post">
+                <h4>{{ page.title }}</h4>
+            </article>
+        {% endfor %}
+      </div>
+   </section>
+  </body>
+</html>

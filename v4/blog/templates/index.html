@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>emiliano maccaferri &mdash; blog</title>
+    <link href="style.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <section class="flexbox column" style="gap: 24px;">
+      <div class="flexbox justify-between align-center">
+        <h1>blog</h1>
+        <p><b>Emiliano Maccaferri</b></p>
+      </div>
+      <h4 class="subtitle">
+        this is where i write stuff that hopefully justifies me having a career in computer science. 
+      </h4>
+      <section id="latest-posts">
+        {% for page in section.pages %}
+          <article class="post">
+            <h5>{{ post.title }}</h5>
+          </article>
+        {% endfor %}
+      </section>
+    </section>
+  </body>
+</html>

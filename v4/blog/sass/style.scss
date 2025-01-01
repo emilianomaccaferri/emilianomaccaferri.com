@@ -1,0 +1,61 @@
+@use 'partials/colors';
+@use 'partials/fonts';
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: archivo;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+body{
+    background: colors.$background;
+}
+
+.flexbox{
+    display: flex;
+    &.align-center{
+        align-items: center;
+    }
+    &.justify-center{
+        justify-content: center;
+    }
+    &.column{
+        flex-direction: column;
+    }
+    &.justify-between{
+        justify-content: space-between;
+    }
+    &.justify-end{
+        justify-content: flex-end;
+    }
+    &.wrap{
+        flex-wrap: wrap;
+    }
+}
+
+section{
+    max-width: 1280px;
+    padding: 48px;
+    width: 100%;
+    margin: 0 auto;
+    &.full{
+        min-height: 100vh;
+    }
+}
+#me{
+    max-width: 550px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+p{
+    &.secondary{
+        color: colors.$textSecondary;
+    }
+}
