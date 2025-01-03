@@ -7,18 +7,32 @@
     <link href="style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <section class="flexbox column" style="gap: 24px;">
-      <div class="flexbox justify-between align-center">
-        <h1>blog</h1>
-        <p><b>Emiliano Maccaferri</b></p>
+    <section class="flexbox column" style="gap: 48px;">
+      <div class="flexbox column" style="gap: 24px;">
+        <div class="flexbox justify-between align-center">
+          <h1>blog</h1>
+          <p><b>Emiliano Maccaferri</b></p>
+        </div>
+        <h4 class="subtitle">
+          stuff i make, rambling and other miscellaneous things   
+        </h4>
       </div>
-      <h4 class="subtitle">
-        this is where i write stuff that hopefully justifies me having a career in computer science. 
-      </h4>
-      <section id="latest-posts">
-        {% for page in section.pages %}
-          <article class="post">
-            <h5>{{ post.title }}</h5>
+      <section id="latest-posts" class="nopad">
+        {% set section = get_section(path="posts/_index.md") %}
+        {% for post in section.pages %}
+          <article class="post flexbox column" style="gap: 12px;">
+            <h3>{{ post.title }}</h3>
+            <span class="label">{{ post.date }}</span>
+            <div class="flexbox wrap" style="gap: 6px;">
+              <!-- only one taxonomy for now, topic -->
+             {% for key, value in post.taxonomies %}
+                {% for topic in value %}
+                  <span class="label small bordered">
+                    {{ topic }}
+                  </span>
+                {% endfor %}
+              {% endfor %}
+            </div>
           </article>
         {% endfor %}
       </section>

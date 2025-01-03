@@ -45,6 +45,11 @@ section{
     padding: 48px;
     width: 100%;
     margin: 0 auto;
+    &.nopad{
+      padding: 0;
+      // padding-top: 48px;
+      // padding-bottom: 48px;
+    }
     &.full{
         min-height: 100vh;
     }
