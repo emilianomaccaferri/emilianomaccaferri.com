@@ -1,0 +1,17 @@
+<article class="post-preview flexbox column" style="gap: 12px;">
+  <h3>{{ post.title }}</h3>
+  <span class="label">{{ post.date }}</span>
+  <p>
+    {{ post.description }}
+  </p>
+  <div class="flexbox wrap" style="gap: 6px;">
+    {% for key, value in post.taxonomies %}
+      {% for topic in value %}
+        <span class="label small bordered">
+          {{ topic }}
+        </span>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</article>
+

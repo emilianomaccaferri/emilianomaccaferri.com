@@ -1,0 +1,6 @@
+{% macro get_posts(n=3) %}
+  {% set section = get_section(path="posts/_index.md") %}
+  {% for post in section.pages | slice(start=0, end=n) %}
+    {%include "post-preview.html" %}
+  {% endfor %}
+{% endmacro %}

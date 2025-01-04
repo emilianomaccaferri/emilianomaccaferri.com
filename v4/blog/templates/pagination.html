@@ -1,0 +1,7 @@
+<section class="flexbox nopad" style="gap: 6px;">
+  {% for i in range(end=paginator.number_pagers) %}
+  <a href="{{paginator.base_url}}{{i + 1}}">
+      <p>{{i + 1}}</p>
+    </a>
+  {% endfor %}
+</section>

@@ -9,13 +9,13 @@
   <body>
     <section class="flexbox column" style="gap: 24px;">
       <h1>{{ section.title }}</h1>
+      <h4 class="subtitle">{{ section.description }}</h4>
       <div class="posts">
-        {% for page in section.pages %}
-            <article class="post">
-                <h4>{{ page.title }}</h4>
-            </article>
+        {% for post in paginator.pages %}
+          {% include "post-preview.html" %}
         {% endfor %}
       </div>
+      {% include "pagination.html" %}
    </section>
   </body>
 </html>
