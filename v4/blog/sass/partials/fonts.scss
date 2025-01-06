@@ -31,15 +31,16 @@ h3{
 h4{
     &.subtitle{
         font-weight: normal;
-        font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+        font-size: clamp(1.15rem, 1.5vw, 1.5rem);
         color: colors.$textSecondary;
         a{
             color: inherit;
         }
     }
 }
-span, p{
-    font-size: clamp(1rem, 1vw, 1rem); 
+span, p, ul, li{
+    font-size: clamp(1rem, 1.1vw, 1.1rem); 
+    line-height: clamp(1.6rem, 1.75vw, 1.75rem);
     &.label {
       color: colors.$textSecondary;
       &.small {

@@ -1,7 +1,13 @@
-<section class="flexbox nopad" style="gap: 6px;">
+<section class="flexbox nopad" id="pagination" style="gap: 6px; padding-top: 24px; padding-bottom: 48px;">
   {% for i in range(end=paginator.number_pagers) %}
+  {% if i == paginator.current_index - 1 %} 
+    <a href="{{paginator.base_url}}{{i + 1}}" class="selected">
+      <p>{{i + 1}}</p>
+    </a>
+  {% else %}
   <a href="{{paginator.base_url}}{{i + 1}}">
       <p>{{i + 1}}</p>
     </a>
+  {% endif %}
   {% endfor %}
 </section>

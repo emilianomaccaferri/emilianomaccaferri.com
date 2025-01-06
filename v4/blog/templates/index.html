@@ -4,25 +4,35 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>emiliano maccaferri &mdash; blog</title>
+    <title>Emiliano Maccaferri &mdash; blog</title>
     <link href="style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <section class="flexbox column" style="gap: 48px;">
-      <div class="flexbox column" style="gap: 24px;">
-        <div class="flexbox justify-between align-center">
-          <h1>blog</h1>
+    <div id="content">
+      {% include "navbar.html" %}
+      <section class="flexbox column" style="gap: 48px;">
+        <div class="flexbox column" style="gap: 24px;">
+          <div class="flexbox justify-between align-center">
+            <h1>Blog</h1>
+          </div>
+          <h4 class="subtitle">
+            Coding, rambling and other miscellaneous things   
+          </h4>
+          <p>
+            Hello there, I'm Emiliano, a 24 year-old research fellow at Unimore. <br> 
+            Welcome to my humble blog, I hope you'll enjoy reading whatever I write here.
+          </p>
+          <p>
+            If you're searching for other things, take a look at my <a href="https://macca.cloud">website</a>.
+          </p>
         </div>
-        <h4 class="subtitle">
-          stuff i make, rambling and other miscellaneous things   
-        </h4>
-      </div>
-      <div class="flexbox column" style="gap: 24px">
-        <h1>latest posts</h1>
-        <section id="latest-posts" class="nopad" style="margin-top: -24px;">
-          {{ macros::get_posts(n=3) }}
-        </section>
-      </div>
-    </section>
+        <div class="flexbox column" style="gap: 24px; padding-bottom: 48px;">
+          <h1>Latest posts</h1>
+          <section id="latest-posts" class="nopad" style="margin-top: -24px;">
+            {{ macros::get_posts(n=3) }}
+          </section>
+        </div>
+      </section> 
+    </div> 
   </body>
 </html>

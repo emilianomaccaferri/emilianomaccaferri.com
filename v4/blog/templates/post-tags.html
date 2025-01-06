@@ -1,0 +1,10 @@
+<div class="flexbox wrap" style="gap: 6px;">
+  {% for key, value in post.taxonomies %}
+    {% for topic in value %}
+      <span class="label small bordered">
+        {{ topic }}
+      </span>
+    {% endfor %}
+  {% endfor %}
+</div>
+

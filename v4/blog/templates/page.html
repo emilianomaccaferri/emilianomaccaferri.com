@@ -1,16 +1,27 @@
-
+{% import "macros.html" as macros %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <meta name="description" content="{{ page.description | safe }}"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>emiliano maccaferri &mdash; blog</title>
+    <title>Emiliano Maccaferri &mdash; {{ page.title }}</title>
     <link href="/style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <section class="flexbox column" style="gap: 24px;">
-      <h1>{{ page.title }}</h1>
-      <div>{{ page.content | safe }}</div>
-    </section>
+    <div id="content">
+      {% include "navbar.html" %}
+      <section class="flexbox column" style="gap: 48px;">
+        <div class="flexbox column" style="gap: 24px">
+          <div class="flexbox column">
+            <span style="margin-bottom: -6px;" class="label">{{ page.date | date(format="%m/%d/%Y") }}</span>
+            <h1>{{ page.title }}</h1>
+          </div> 
+          <h4 class="subtitle"> {{ page.description }} </h4> 
+          {{ macros::get_tags(post=page) }}
+        </div>
+        <div>{{ page.content | safe }}</div>
+        </section>
+      </div>
   </body>
 </html>

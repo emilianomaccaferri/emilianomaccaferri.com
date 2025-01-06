@@ -3,19 +3,23 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>emiliano maccaferri &mdash; {{ section.title }}</title>
+    <meta name="description" content="{{ section.description }}">
+    <title>Emiliano Maccaferri &mdash; {{ section.title }}</title>
     <link href="/style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <section class="flexbox column" style="gap: 24px;">
-      <h1>{{ section.title }}</h1>
-      <h4 class="subtitle">{{ section.description }}</h4>
-      <div class="posts">
-        {% for post in paginator.pages %}
-          {% include "post-preview.html" %}
-        {% endfor %}
-      </div>
-      {% include "pagination.html" %}
-   </section>
+   <div id="content"> 
+      {% include "navbar.html" %}
+      <section class="flexbox column" style="gap: 24px;">
+        <h1>{{ section.title }}</h1>
+        <h4 class="subtitle">{{ section.description }}</h4>
+        <div class="posts">
+          {% for post in paginator.pages %}
+            {% include "post-preview.html" %}
+          {% endfor %}
+        </div>
+        {% include "pagination.html" %}
+      </section>
+    </div>
   </body>
 </html>

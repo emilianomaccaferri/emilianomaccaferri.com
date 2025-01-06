@@ -1,6 +1,6 @@
 +++
-title = "all posts"
-description = "rambling about stuff, mostly tech-related"
+title = "All posts"
+description = "Every post I made, ordered by date"
 sort_by = "date"
 paginate_by = 5
 +++
