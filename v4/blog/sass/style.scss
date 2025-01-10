@@ -45,6 +45,10 @@ body{
   padding-left: 48px;
   padding-right: 48px; 
   padding-bottom: 48px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 #navbar{
   width: 100%;

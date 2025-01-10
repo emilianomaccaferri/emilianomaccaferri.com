@@ -9,6 +9,19 @@
     src: url(./fonts/archivo-black.ttf);
     font-weight: bold;
 }
+@font-face {
+    font-family: fira-code;
+    src: url(./fonts/fira_code.ttf);
+}
+code{
+  font-family: fira-code;
+  background: #cecece;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  border-radius: 3.5px;
+}
 h1{
     font-size: clamp(2rem, 4.2062vw, 4.2062rem); 
     font-family: archivo;
