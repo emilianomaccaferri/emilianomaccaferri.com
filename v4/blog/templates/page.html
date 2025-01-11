@@ -10,20 +10,30 @@
     <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
     <link href="/style.css" type="text/css" rel="stylesheet" />
   </head>
+  <style>
+    
+  </style>
   <body>
     <div id="content">
       {% include "navbar.html" %}
-      <section class="flexbox column" style="gap: 48px;">
-        <div class="flexbox column" style="gap: 24px">
-          <div class="flexbox column">
-            <span style="margin-bottom: -6px;" class="label">{{ page.date | date(format="%m/%d/%Y") }}</span>
-            <h1>{{ page.title }}</h1>
-          </div> 
-          <h4 class="subtitle"> {{ page.description }} </h4> 
-          {{ macros::get_tags(post=page) }}
-        </div>
-        <div>{{ page.content | safe }}</div>
-        </section>
+      <section class="flexbox justify-center align-top wrap" style="gap: 48px;">
+        <section class="flexbox column" style="gap: 48px; width: 75%; flex: 1 1 670px;">
+          <div class="flexbox column" style="gap: 24px">
+            <div class="flexbox column">
+              <span style="margin-bottom: -6px;" class="label">{{ page.date | date(format="%m/%d/%Y") }}</span>
+                <h1>{{ page.title }}</h1>
+              </div> 
+              <h4 class="subtitle"> {{ page.description }} </h4> 
+              {{ macros::get_tags(post=page) }}
+            </div>
+            <div id="post-content">{{ page.content | safe }}</div>
+          </section>
+          <section id="telegram-subscribe" class="flexbox column" style="gap: 12px; flex: 1 1 200px;">
+            <h4>Stay in the loop</h4>
+            <p>Subscribe to my Telegram channel to keep in touch and receive notifications as soon as posts go online!</p>
+            <a href="https://t.me/maccablog" target="_blank"><button class="secondary">Subscribe</button></a>
+          </section>
+        </section> 
       </div>
   </body>
 </html>

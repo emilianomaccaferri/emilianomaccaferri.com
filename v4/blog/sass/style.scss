@@ -23,6 +23,9 @@ body{
     &.align-center{
         align-items: center;
     }
+    &.align-top{
+      align-items: flex-start;
+    }
     &.justify-center{
         justify-content: center;
     }
@@ -39,15 +42,45 @@ body{
         flex-wrap: wrap;
     }
 }
+.sticky{
+  position: sticky;
+}
+button{
+  border: 2px solid colors.$onBackground;
+  color: colors.$textPrimary;
+  width: 100%;
+  cursor: pointer;
+  max-width: 570px;
+  background: none; 
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 24px;
+  padding-right: 24px;
+  font-size: 1rem;
+  &.secondary {
+    border: 2px solid colors.$onBackgroundSecondary;
+    color: colors.$onBackgroundSecondary;
+  }
+}
 #content{
-  max-width: 1080px;
+  max-width: 1180px;
   margin: 0 auto;
   padding-left: 48px;
   padding-right: 48px; 
   padding-bottom: 48px;
-  img {
-    max-width: 100%;
-    max-height: 100%;
+  #telegram-subscribe{
+    background: colors.$backgroundSecondary;
+    padding: 24px; 
+    color: colors.$onBackgroundSecondary;
+  }
+  #post-content {  
+    p{
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0 auto;
+      }
+    }
   }
 }
 #navbar{
@@ -59,8 +92,10 @@ body{
   }
 }
 section{
-    width: 100%;
-    margin: 0 auto;
+    margin: 0 auto; 
+    &.fw{
+      width: 100%;
+    }
     &.nopad{
       padding: 0;
       // padding-top: 48px;

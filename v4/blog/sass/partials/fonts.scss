@@ -60,8 +60,10 @@ span, p, ul, li{
         font-size: clamp(.90rem, .90vw, .90rem); 
       }
       &.bordered {
-        border-radius: 3px;
-        padding: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 1.5px;
+        padding-bottom: 1.5px;
         color: colors.$background;
         background: colors.$onBackground;
       }

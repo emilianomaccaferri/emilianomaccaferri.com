@@ -13,7 +13,7 @@
   <body>
     <div id="content">
       {% include "navbar.html" %}
-      <section class="flexbox column" style="gap: 48px;">
+      <section class="fw flexbox column" style="gap: 48px;">
         <div class="flexbox column" style="gap: 24px;">
           <div class="flexbox justify-between align-center">
             <h1>Blog</h1>
@@ -31,7 +31,7 @@
         </div>
         <div class="flexbox column" style="gap: 24px; padding-bottom: 48px;">
           <h1>Latest posts</h1>
-          <section id="latest-posts" class="nopad" style="margin-top: -24px;">
+          <section id="latest-posts" class="fw nopad" style="margin-top: -24px;">
             {{ macros::get_posts(n=3) }}
           </section>
         </div>
