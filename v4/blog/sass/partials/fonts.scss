@@ -13,14 +13,35 @@
     font-family: fira-code;
     src: url(./fonts/fira_code.ttf);
 }
+@font-face {
+    font-family: ibm;
+    src: url(./fonts/ibm_plex_mono.ttf);
+}
 code{
-  font-family: fira-code;
+  font-family: ibm;
   background: #cecece;
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 2.5px;
   padding-bottom: 2.5px;
   border-radius: 3.5px;
+  span {
+    font-family: ibm;
+  }
+}
+
+pre{
+  overflow-x: auto;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  code {
+    word-break: break-all;
+    font-family: ibm;
+    padding: none;
+    background: none;
+    color: colors.$onBackgroundSecondary;
+  }
 }
 h1{
     font-size: clamp(2rem, 4.2062vw, 4.2062rem); 

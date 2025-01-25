@@ -1,7 +1,7 @@
 <a href="{{ post.permalink }}" class="nodeco">
   <article class="post-preview flexbox column" style="gap: 12px;">
     <h3>{{ post.title }}</h3>
-    <span class="label">{{ post.date | date(format="%m/%d/%Y") }}</span>
+    <span class="label">{{ post.date | date(format="%d/%m/%Y") }}</span>
     <p>
       {{ post.description }}
     </p>
