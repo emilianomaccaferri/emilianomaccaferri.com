@@ -1,5 +1,5 @@
 +++
-title = "JWT authentication on NGINX with JWK"
+title = "JWT authentication on NGINX with JWKS"
 date = "2025-01-25"
 description = "Decentralized authentication has never been so easy"
 [taxonomies]
@@ -39,80 +39,16 @@ This way, the application gateway will act as a centralized request router and w
 Naturally, we will have to replicate the application gateway to ensure high availability in production scenarios.
 <br><br>
 
-## Implementation with NGINX + NJS and Keycloak
+## What are JWKS?
 
 <br>
 
-Note: what we will see today is a proof-of-concept scenario that is definitely not ready for production: the aim of this article is to give you a general idea on which you can build more complex scenarios.
-<br>
-I love NGINX because it never stopped evolving through the years, constantly keeping its game up even against tough competition (see Caddy or Traefik).<br>
-One thing that drastically eased the modularity of NGINX was the introduction of [NJS](https://nginx.org/en/docs/njs/), essentially a JS runtime inside NGINX (I know it sounds daunting at first, but bear with me for a second),
-that completely revolutionized how custom functionality can be added to a standard NGINX installation.
-<br>
-Today, we will see how to implement a _proof of concept_ JWT authentication mechanism using [JWKS](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-key-sets), aka public keys for JWTs.
-<br>
-If you're not familiar on how JWT authentication works, you can [read the official introduction](https://jwt.io/introduction), but basically, all you need to know
-is that JWTs are non-opaque tokens (meaning that can encode information) that are signed from somebody with a key (that can be asymmetric or symmetric); such signature can be then verified from
-others using the corresponding verification mechanism (which is HMAC verification for symmetric keys or public key verification for asymmetric keys).
-<br>
-<br>
+When a JWT is emitted, a trailing signature is appended. Such signature can be generated using symmetric or asymmetric algorithms:
 
-#### A simple `compose.yaml` file
+- when using symmetric algorithms, the signature is generated using a SHA-based HMAC (256, 384, 512). To verify the signature of a symmetrically-signed JWT, you'll need to know the same key used to generate the HMAC;
+- when using asymettric algorithms, insted, the signature is generated using a private key of a certain key pair. To verify the signature of an asymetrically-signed JWT, you'll need to know the public key of the given keypair.
 
-<br>
+Today we'll talk about the asymmetric version of JWT verification and how we can leverage JWKS to implement such task.
+<br><br>
 
-We will model an example scenario using Docker Compose for simplicity, but the following can be replicated in whatever environment you want, of course.
-Our `compose.yaml` file will look like this:
-
-```yaml
-networks: 
-  nginx-jwk-net:
-
-services:
-  microservice-a:
-    build: 
-      dockerfile: Dockerfile
-      context: ./microservice-a
-    networks:
-      - nginx-jwk-net
-
-  microservice-b:
-    build: 
-        dockerfile: Dockerfile
-        context: ./microservice-b
-      networks:
-        - nginx-jwk-net
-  
-  kc:
-    build:
-      dockerfile: ./keycloak/Dockerfile
-    ports:
-      - 8080:8080
-    entrypoint: ["/opt/keycloak/bin/kc.sh", "start-dev"]
-    environment:
-      - KC_HOSTNAME=localhost
-      - KC_HOSTNAME_PORT=8080
-      - KC_HOSTNAME_STRICT=false
-      - KC_HOSTNAME_STRICT_HTTPS=false
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    networks:
-      - nginx-jwk-net
-  
-  nginx:
-    depends_on:
-      - kc
-      - microservice-a
-      - microservice-b
-    build:
-      network: host
-      context: ./nginx
-    volumes:
-      - ./nginx/etc/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/etc/conf.d:/etc/nginx/conf.d
-      - ./nginx/etc/js:/etc/nginx/js
-    networks:
-      - nginx-jwk-net
-    ports:
-      - 58080:6000
-```
+JWKS (Json Web Keys Sets) are _set of public keys_ we can use to verify tokens coming from a token issuer (that signs stuff using the corresponding private keys). JWKS are often published using a JWKS endpoint, a JSON-encoded document
