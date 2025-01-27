@@ -43,12 +43,59 @@ Naturally, we will have to replicate the application gateway to ensure high avai
 
 <br>
 
-When a JWT is emitted, a trailing signature is appended. Such signature can be generated using symmetric or asymmetric algorithms:
+When a JWT is emitted, a signature is appended at the end of the token. Such signature can be generated using symmetric or asymmetric algorithms:
 
 - when using symmetric algorithms, the signature is generated using a SHA-based HMAC (256, 384, 512). To verify the signature of a symmetrically-signed JWT, you'll need to know the same key used to generate the HMAC;
-- when using asymettric algorithms, insted, the signature is generated using a private key of a certain key pair. To verify the signature of an asymetrically-signed JWT, you'll need to know the public key of the given keypair.
+- when using asymmetric algorithms, instead, the signature is generated using a private key of a certain key pair. To verify the signature of an asymetrically-signed JWT, you'll need to know the public key of the given keypair.
 
 Today we'll talk about the asymmetric version of JWT verification and how we can leverage JWKS to implement such task.
 <br><br>
 
-JWKS (Json Web Keys Sets) are _set of public keys_ we can use to verify tokens coming from a token issuer (that signs stuff using the corresponding private keys). JWKS are often published using a JWKS endpoint, a JSON-encoded document
+JWKS (Json Web Keys Sets) are _set of public keys_ we can use to verify tokens coming from a token issuer (that signs using the corresponding private keys). JWKS are often published in JSON format using a so-called JWKS endpoint.
+<br><br>
+
+In this tutorial I will create three simple microservices: A, B and the "signer", which is the JWT emitter. All of these microservices will be behind a NGINX instance that will implement the token authentication logic.
+<br><br>
+
+## Implementation
+
+<br>
+
+We will implement the example scenario we just saw in the "solution" paragraph: two microservices that need to talk to each other while implementing the authentication mechanism.
+<br>
+Our folder structure will be:
+
+```bash
+.
+├── compose.yaml
+├── LICENSE
+├── microservice-a
+│   ├── Dockerfile
+│   └── index.js
+├── microservice-b
+│   ├── Dockerfile
+│   └── index.js
+├── nginx
+│   ├── Dockerfile
+│   └── etc
+│       ├── conf.d
+│       │   └── default.conf
+│       ├── js
+│       │   └── index.js
+│       └── nginx.conf
+└── signer
+    ├── Dockerfile
+    └── index.js
+```
+
+<br>
+
+#### Docker Compose setup
+
+#### Initial NGINX setup
+
+#### Microservices A and B
+
+#### Signer microservice
+
+#### Introducing the authenticaiton logic
