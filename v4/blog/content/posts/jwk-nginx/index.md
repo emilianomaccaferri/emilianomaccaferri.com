@@ -61,6 +61,10 @@ In this tutorial I will create three simple microservices: A, B and the "signer"
 
 <br>
 
+Note: the reference source code is available here: <https://github.com/emilianomaccaferri/nginx-jwk/>
+
+<br>
+
 We will implement the example scenario we just saw in the "solution" paragraph: two microservices that need to talk to each other while implementing the authentication mechanism.
 <br>
 Our folder structure will be:
@@ -92,10 +96,260 @@ Our folder structure will be:
 
 #### Docker Compose setup
 
-#### Initial NGINX setup
+<br>
+
+We will use Docker (Compose) to model our scenario, using a very simple `compose.yaml` file:
+
+```yaml
+networks:
+  nginx-jwk-net:
+
+services:
+  microservice-a:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservice-a
+    networks:
+      - nginx-jwk-net
+  microservice-b:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservice-b
+    networks:
+      - nginx-jwk-net
+  signer:
+    build:
+      dockerfile: Dockerfile
+      context: ./signer
+    networks:
+      - nginx-jwk-net
+  nginx:
+    depends_on:
+      - signer
+      - microservice-a
+      - microservice-b
+    build:
+      network: host
+      context: ./nginx
+    volumes:
+      - ./nginx/etc/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/etc/conf.d:/etc/nginx/conf.d
+      - ./nginx/etc/js:/etc/nginx/js
+    networks:
+      - nginx-jwk-net
+    ports:
+      - 58080:8000
+```
+
+<br>
 
 #### Microservices A and B
 
+<br>
+
+We have two microservices that communicate through an HTTP request, just like the image above.
+[Here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/microservice-a/index.js) you can see A's code whereas [here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/microservice-b/index.js) you can see B's. As you can probably tell, A will make an HTTP request using NGINX as a passthrough.
+
+<br>
+
 #### Signer microservice
 
-#### Introducing the authenticaiton logic
+<br>
+
+The signer microservice will emit JWT tokens and expose the JWK endpoint. The code is [here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/signer/index.js).
+
+<br>
+
+#### Initial NGINX setup
+
+<br>
+
+To glue everything together, we can define our NGINX configuration like this:
+
+```nginx
+js_import authService from js/index.js;
+
+  # snip ... 
+
+server {
+    listen 8000;
+    js_var $no_auth_reason; # very important!
+
+    location = .validate {
+        internal;
+        js_content authService.validateJwt;
+    }
+
+    location /signer/ {
+        gunzip on;
+        proxy_pass http://signer:3000/;        
+        proxy_cache jwk_response;
+    }
+
+    location /a/ {
+        auth_request .validate;
+        error_page 401 = @unauthorized;
+        
+        proxy_pass http://microservice-a:3000/;
+    }
+    location /b/ {
+        auth_request .validate;
+        error_page 401 = @unauthorized;
+        
+        proxy_pass http://microservice-b:3000/;
+    }
+
+# snip ... 
+```
+
+The full configuration is available [here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/nginx/etc/conf.d/default.conf), but the fundamental bits are captured in the snippet just above. What we are doing is reverse-proxying all our microservices behind NGINX: every request that hits the `/a` or `/b` endpoints will go through an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html) (called `.validate`) in our configuration. This particular `location` block will run our custom JS authentication logic, which we will see in a bit.
+<br>
+
+From the [documentation](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html), we can see that `auth_requests` can only return `203`, `401` or `403` error codes. Since we will only use the `401` error code inside our JS script, we will catch such code with the `error_page` directive, that will redirect our request to yet another custom route, called `@unauthorized` (code below). This way, if the authentication fails, we will redirect errored request to such page.
+
+```nginx
+location @unauthorized {
+  internal;
+  default_type application/json;
+  add_header Content-Type "application/json";
+  if ($no_auth_reason = 'bad_signature') {
+      return 400 '{
+          "success": false,
+          "error": "invalid signature"
+      }';
+  }
+
+  if ($no_auth_reason = 'invalid_jwt') {
+      return 400 '{
+          "success": false,
+          "error": "token is malformed"
+      }';
+  }
+  if ($no_auth_reason = 'empty_token') {
+      return 400 '{
+          "success": false,
+          "error": "token is empty"
+      }';
+  }
+  if ($no_auth_reason = 'bad_introspection') {
+      return 500 '{
+          "success": false,
+          "error": "introspection failed"
+      }';
+  }
+  if ($no_auth_reason = 'not_active') {
+      return 403 '{
+          "success": false,
+          "error": "token is not active"
+      }';
+  }
+  if ($no_auth_reason = 'no_roles') {
+        return 401 '{
+            "success": false,
+            "error": "you are not authorized to access this resource"
+        }';
+    }
+    if ($no_auth_reason = 'cannot_parse') {
+        return 500 '{
+            "success": false,
+            "error": "parsing error"
+        }';
+    }
+    return 500 '{
+        "success": false,
+        "error": "something unknown happened :O"
+    }';
+  }
+```
+
+As you can see, we use the `$no_auth_reason` we defined earlier (which is modified inside the JS script, as we will see in a bit) to filter the correct return message.
+
+<br>
+
+#### The authentication logic
+
+<br>
+
+The authentication code is imported using the `js_import` variable at the top of the NGINX configuration file. Inside, we defined the `validateJwt` function (that is the one we use in the `.validate` location block) that does all the heavy lifting:
+
+```js
+const validateJwt = async (res) => {
+  try {
+    const jwk = await res.subrequest('/signer/jwk');
+    const parsed_jwk = JSON.parse(jwk.responseText);
+    const preferred_key = parsed_jwk["keys"]
+      .filter(k =>
+        k.kty === "EC"
+      );
+
+    if (preferred_key.length === 0)
+      throw new Error('no preferred key');
+
+    const jwt = res.variables.header_token;
+    const key = await crypto
+      .subtle
+      .importKey(
+        "jwk",
+        preferred_key[0],
+        {
+          name: "ECDSA",
+          namedCurve: "P-521",
+        },
+        true,
+        ["verify"]
+      );
+    const jwt_split = jwt.split(".");
+    if (jwt_split.length !== 3) {
+      res.variables.no_auth_reason = "invalid_jwt";
+      res.return(401);
+      return;
+    }
+    const signing_input = jwt_split.slice(0, 2).join('.');
+    const verify = await crypto.subtle.verify({
+      name: "ECDSA", 
+      namedCurve: "P-521",
+      hash: "SHA-512"
+    },
+      key,
+      decode(jwt_split[2]),
+      encoder.encode(signing_input),
+    );
+    res.error(verify);
+    if (!verify) {
+      res.variables.no_auth_reason = "bad_signature";
+      res.return(401);
+      return;
+    }
+    res.return(203);
+  } catch (err) {
+    res.error(err);
+    res.variables.no_auth_reason = "generic_error";
+    res.return(401);
+  }
+}
+```
+
+In a nutshell, what happens is:
+
+- the JWKS is downloaded from the `/signer/jwk` endpoint (which is cached from NGINX). Such JWKS will be used to verify the token contained in the request;
+- the correct (and only, in this case) key is extracted;
+- the key is imported using the `crypto` module included in NGINX ([reference here](https://nginx.org/en/docs/njs/reference.html#crypto));
+- since this is a proof of concept implementation, only the signature verification is performed on the token. A complete implementation will also take into account the `iss` and `exp` fields;
+- if the verification is successful, the request is let through, otherwise a `401` error is raised with the corresponding `no_auth_reason`;
+
+To test everything we can use the `/signer/example-token` endpoint to obtain a JWT and verify that everything works correctly.
+
+<br>
+
+## Conclusions
+
+<br>
+
+We can leverage NGINX's powerful ecosystem to implement complex authentication logic to free our microservices from boilerplate code. Using stateless authentication mechanisms such as JWTs and JWKS makes the task particularly simple, rendering the maintenance of a modern microservice-based system a tad simpler.
+
+<br>
+
+That was all for today,
+<br>
+
+until the next post!
