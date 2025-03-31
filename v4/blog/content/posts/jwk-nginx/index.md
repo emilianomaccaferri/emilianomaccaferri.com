@@ -1,7 +1,7 @@
 +++
 title = "JWT authentication on NGINX with JWKS"
-date = "2025-01-25"
-description = "Decentralized authentication has never been so easy"
+date = "2025-01-27"
+description = "Decentralized authentication has never been easier"
 [taxonomies]
 topic = ["microservices", "authentication", "nginx"]
 +++
@@ -51,7 +51,28 @@ When a JWT is emitted, a signature is appended at the end of the token. Such sig
 Today we'll talk about the asymmetric version of JWT verification and how we can leverage JWKS to implement such task.
 <br><br>
 
-JWKS (Json Web Keys Sets) are _set of public keys_ we can use to verify tokens coming from a token issuer (that signs using the corresponding private keys). JWKS are often published in JSON format using a so-called JWKS endpoint.
+JWKS (Json Web Keys Sets) are _sets of public keys_ we can use to verify tokens coming from a token issuer (that signs using the corresponding private keys). JWKS are often published in JSON format using a so-called JWKS endpoint and they look like this:
+
+```json
+{"keys":
+       [
+         {"kty":"EC",
+          "crv":"P-256",
+          "x":"MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
+          "y":"4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
+          "use":"enc",
+          "kid":"1"},
+
+         {"kty":"RSA",
+          "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx...",
+          "e":"AQAB",
+          "alg":"RS256",
+          "kid":"2011-04-29"}
+       ]
+     }
+```
+
+As you can see, a JWK encodes all the information needed to extract the verification algorithm clients should use to check the signature of JWTs.
 <br><br>
 
 In this tutorial I will create three simple microservices: A, B and the "signer", which is the JWT emitter. All of these microservices will be behind a NGINX instance that will implement the token authentication logic.
@@ -160,7 +181,7 @@ The signer microservice will emit JWT tokens and expose the JWK endpoint. The co
 
 <br>
 
-#### Initial NGINX setup
+#### NGINX configuration
 
 <br>
 
@@ -202,10 +223,10 @@ server {
 # snip ... 
 ```
 
-The full configuration is available [here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/nginx/etc/conf.d/default.conf), but the fundamental bits are captured in the snippet just above. What we are doing is reverse-proxying all our microservices behind NGINX: every request that hits the `/a` or `/b` endpoints will go through an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html) (called `.validate`) in our configuration. This particular `location` block will run our custom JS authentication logic, which we will see in a bit.
+The full configuration is available [here](https://github.com/emilianomaccaferri/nginx-jwk/blob/main/nginx/etc/conf.d/default.conf), but the fundamental bits are captured in the snippet just above. What we are doing is reverse-proxying all our microservices behind NGINX: every request that hits the `/a` or `/b` endpoints will go through an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html) (called `.validate`). This particular `location` block will run our custom JS authentication logic, which we will see in a bit.
 <br>
 
-From the [documentation](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html), we can see that `auth_requests` can only return `203`, `401` or `403` error codes. Since we will only use the `401` error code inside our JS script, we will catch such code with the `error_page` directive, that will redirect our request to yet another custom route, called `@unauthorized` (code below). This way, if the authentication fails, we will redirect errored request to such page.
+From the [documentation](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html), we can see that `auth_request`s can only return `203`, `401` or `403` error codes. Since we will only use the `401` error code inside our JS script, we will catch such code with the `error_page` directive, that redirects our request to yet another custom route, called `@unauthorized` (code below), in case the authentication process fails.
 
 ```nginx
 location @unauthorized {
